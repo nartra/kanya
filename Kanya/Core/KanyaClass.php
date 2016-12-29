@@ -2,8 +2,10 @@
 
 namespace Kanya\Core\Kanya;
 
+class KanyaClass {
 
-class KanyaClass
-{
-    
+    public function kanya() {
+        return Initializer::sharedInstance()->getHandler();
+    }
+
 }

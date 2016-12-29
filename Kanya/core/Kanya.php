@@ -2,28 +2,30 @@
 
 namespace Kanya\Core\Kanya;
 
+class Kanya extends KanyaClass {
 
-class Kanya extends KanyaClass
-{
-
-    public function request()
-    {
+    public function request() {
         
     }
 
-    public function run()
-    {
+    public function run() {
         try {
             return $this->exec();
-        }
-        catch ( Exception $e ) {
+        } catch (Exception $e) {
             
         }
     }
 
-    public function exec()
-    {
+    protected function exec() {
+        $handler = $this->router->routing($this->getCurrentRequest());
         
+        if(is_null($handler)){
+            throw new \Kanya\Exception\RouteHandlerNotFound();
+        }
+    }
+
+    protected function getCurrentRequest() {
+        return $this->request();
     }
 
 }
