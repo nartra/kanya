@@ -18,14 +18,20 @@ class Kanya extends KanyaClass {
 
     protected function exec() {
         $handler = $this->router->routing($this->getCurrentRequest());
-        
-        if(is_null($handler)){
+
+        if (is_null($handler)) {
             throw new \Kanya\Exception\RouteHandlerNotFound();
         }
+        
+        $this->invokeHandler($handler);
     }
 
     protected function getCurrentRequest() {
         return $this->request();
+    }
+    
+    protected function invokeHandler(Handler $handler){
+        $handler->run();
     }
 
 }
