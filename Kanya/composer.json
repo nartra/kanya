@@ -1,0 +1,13 @@
+{
+    "require": {
+        "illuminate/validation": "5.*",
+        "illuminate/database" : "5.*",
+        "twig/twig": "1.*",
+        "twig/extensions": "*",
+        "cartalyst/sentry" : "2.*",
+        "ircmaxell/password-compat": "1.0.*",
+        "raveren/kint": "^1.0",
+        "jeremeamia/superclosure": "^2.2",
+        "bshaffer/oauth2-server-php": "~1.8"
+    }
+}
