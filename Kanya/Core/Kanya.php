@@ -2,65 +2,82 @@
 
 namespace Kanya\Core\Kanya;
 
-class Kanya extends Context {
-    
-    public function __construct() {
+
+class Kanya extends Context
+{
+
+    public function __construct()
+    {
         $this->initContext($this);
     }
 
-    public function initContext(Context $context) {
+    public function initContext( Context $context )
+    {
         $context->setCoreClass($this);
         $context->setRequestClass(Http\Request::class);
         $context->setResponseClass(Http\Response::class);
         $context->setRouterClass(Router::class);
     }
 
-    public function run() {
+    public function run()
+    {
         try {
             return $this->exec();
-        } catch (Exception $e) {
+        }
+        catch ( Exception $e ) {
             
         }
     }
 
-    protected function exec() {
-        try{
-            if($this->router->isRoutingOverLimit()){
+    protected function exec()
+    {
+        try {
+            if ( $this->router->isRoutingOverLimit() ) {
                 
             }
-            
+
             $route = $this->router->routing($this->request());
 
-            foreach($route->handlerIterator() as $handler){
+            $handler_list = $route->getHandlerList();
+            
+            $handler = array_shift($handler_list);
 
-                if (is_null($handler) || $handler->isInvalid()) {
+            foreach ( $route->handlerIterator() as $handler ) {
+
+                if ( is_null($handler) || $handler->isInvalid() ) {
                     throw new \Kanya\Exception\RouteHandlerNotFound();
                 }
 
-                try{
+                try {
                     $this->invokeHandler($handler);
                 }
-                catch(Cancel $retry){
-
+                catch ( Cancel $retry ) {
+                    
                 }
-                catch(Skip $retry){
-
+                catch ( Skip $retry ) {
+                    
                 }
             }
-
         }
-        catch(Retry $retry){
-
+        catch ( Retry $retry ) {
+            
         }
     }
-    
-    protected function invokeHandler(Handler $handler){
+
+    protected function handlingPlan(Handler $handler)
+    {
+        
+    }
+
+    protected function invokeHandler( Handler $handler )
+    {
         $handler->run();
     }
-    
-    public function __get($name) {
-        if(method_exists($this, $name)){
-            return Tool\Dispatcher::call([$this, $name]);
+
+    public function __get( $name )
+    {
+        if ( method_exists($this, $name) ) {
+            return Tool\Dispatcher::call([ $this, $name ]);
         }
         throw new Exception();
     }

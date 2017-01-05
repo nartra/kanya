@@ -2,7 +2,7 @@
 
 namespace Kanya\Core\Kanya;
 
-class Target extends KanyaClass {
+class Uri extends KanyaClass {
     
     private $original_uri;
 
@@ -16,7 +16,7 @@ class Target extends KanyaClass {
     }
 
     public static function create($any){
-        if($uri = Target::parse($any)){
+        if($uri = Uri::parse($any)){
             return $uri;
         }
         return new static($any);

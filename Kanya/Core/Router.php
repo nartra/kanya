@@ -37,7 +37,7 @@ class Router extends KanyaClass {
     public function routing(){
         
         $this->routing_count++;
-        $target = Target::parse($this->context()->request());
+        $target = Uri::parse($this->context()->request());
         
         if(is_null($target)){
             return $target;
@@ -56,7 +56,7 @@ class Router extends KanyaClass {
         return $this->routing_count > $this->retry_limit;
     }
 
-    private function addToRouters($method, Target $uri, Handler $handler){
+    private function addToRouters($method, Uri $uri, Handler $handler){
         $uri->addBaseUri($this->base_uri);
         $route = $this->createRoute($method, $uri, $handler);
         $this->patcher->routes->put($this->prepareMethod($method), $route);
@@ -64,7 +64,7 @@ class Router extends KanyaClass {
     }
 
     public function route($methods, $uri, $handler = null) {
-        return $this->addToRouters($methods, Target::parse($uri), Handler::parse($handler));
+        return $this->addToRouters($methods, Uri::parse($uri), Handler::parse($handler));
     }
     
     public function any($uri, $handler = null){
@@ -87,7 +87,11 @@ class Router extends KanyaClass {
         throw new Kanya\Exception\RuntimeController\Cancel();
     }
     
-    protected function createRoute($method, Target $uri, Handler $handler){
+    public function skip(){
+        throw new Kanya\Exception\RuntimeController\Skip();
+    }
+    
+    protected function createRoute($method, Uri $uri, Handler $handler){
         $route = new Route($this);
         $route->setMethod($method);
         $route->setTarget($uri);
@@ -105,7 +109,7 @@ class Router extends KanyaClass {
         return $method;
     }
     
-    private function searchForMatchRoute(Target $lookup_uri){
+    private function searchForMatchRoute(Uri $lookup_uri){
         
     }
 
