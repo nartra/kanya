@@ -12,7 +12,7 @@ $kanya = $initializer->make(App\Core\MyKanya::class);
 
 //router
 $kanya->loader->include(APP_PATH . '/router.php', [
-    'router' => $kanya->router->createRouteFactory()
+    'router' => $kanya->router()
 ]);
 
 $kanya->run();
