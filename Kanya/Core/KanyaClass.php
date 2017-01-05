@@ -2,10 +2,19 @@
 
 namespace Kanya\Core\Kanya;
 
-class KanyaClass {
+abstract class KanyaClass {
 
-    public function kanya() {
+    public function context() {
         return Initializer::sharedInstance()->getHandler();
+    }
+    
+    public static function parse($any){
+        
+        if(is_object($any) && $any instanceof KanyaClass){
+            return $any;
+        }
+        
+        return null;
     }
 
 }

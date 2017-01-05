@@ -2,10 +2,17 @@
 
 namespace Kanya\Core\Kanya;
 
-class Kanya extends KanyaClass {
+class Kanya extends Context {
+    
+    public function __construct() {
+        $this->initContext($this);
+    }
 
-    public function request() {
-        
+    public function initContext(Context $context) {
+        $context->setCoreClass($this);
+        $context->setRequestClass(Http\Request::class);
+        $context->setResponseClass(Http\Response::class);
+        $context->setRouterClass(Router::class);
     }
 
     public function run() {
@@ -17,21 +24,45 @@ class Kanya extends KanyaClass {
     }
 
     protected function exec() {
-        $handler = $this->router->routing($this->getCurrentRequest());
+        try{
+            if($this->router->isRoutingOverLimit()){
+                
+            }
+            
+            $route = $this->router->routing($this->request());
 
-        if (is_null($handler)) {
-            throw new \Kanya\Exception\RouteHandlerNotFound();
+            foreach($route->handlerIterator() as $handler){
+
+                if (is_null($handler) || $handler->isInvalid()) {
+                    throw new \Kanya\Exception\RouteHandlerNotFound();
+                }
+
+                try{
+                    $this->invokeHandler($handler);
+                }
+                catch(Cancel $retry){
+
+                }
+                catch(Skip $retry){
+
+                }
+            }
+
         }
-        
-        $this->invokeHandler($handler);
-    }
+        catch(Retry $retry){
 
-    protected function getCurrentRequest() {
-        return $this->request();
+        }
     }
     
     protected function invokeHandler(Handler $handler){
         $handler->run();
+    }
+    
+    public function __get($name) {
+        if(method_exists($this, $name)){
+            return Tool\Dispatcher::call([$this, $name]);
+        }
+        throw new Exception();
     }
 
 }
