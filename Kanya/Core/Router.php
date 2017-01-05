@@ -10,6 +10,15 @@ class Router extends KanyaClass {
         return new static();
     }
 
+    public function createRoute($method, $uri, Handler $handler) {
+        $route = new Route();
+		$route->setMethod($method);
+		$route->setBaseUri('/');
+		$route->setUri($uri);
+		$route->setHandler($handler);
+		return $route;
+    }
+
     public function route($method, $uri, $handler = null) {
         
     }
